@@ -16,6 +16,8 @@ function App() {
   let [title, setTitle] = useState(['리액트 학습', '울산 맛집', '겨울 코트 추천']);
   let [likeCnt, setLikeCnt] = useState([0, 0, 0]);
   let [isShow, setIsShow] = useState(false);
+  //값을 저장하는 state 변수 생성
+  let [newTitle, setNewTitle] = useState('')
 
   return (
     <div className="App">
@@ -33,12 +35,25 @@ function App() {
       {
         title.map((e, i)=>{
           return (
-            <List key={i} title={e} likeCnt={likeCnt} idx={i} setLikeCnt={setLikeCnt}
-            setIsShow={setIsShow} />
+            <List key={i} title={title} likeCnt={likeCnt} idx={i} setLikeCnt={setLikeCnt}
+            setIsShow={setIsShow} setTitle={setTitle}/>
             //또는 <List title={title[i]}/>
           )
         })
       }
+
+      <div>
+        <input id='newTitle' type="text" onChange={(e)=> {
+            // input 태그에 입력한 값을 출력
+            // e는 event
+            setNewTitle(e.target.value)
+            // event가 발생한 태그의 값을 newTitle에 저장
+        }}/>
+        <input type='button' value={'저장'} onClick={(e) => {
+          let copyTitle = [...title]
+          copyTitle.unshift(newTitle)
+          setTitle(copyTitle)}}/>
+      </div>
 
       {
         isShow ? <Detail /> : ''
@@ -56,12 +71,19 @@ function List(props){
     <div className='list'>
       <h4> <span onClick={() => {
         props.setIsShow(true)
-      }}>{props.title}</span> <span onClick={() => {
+      }}>{props.title[props.idx]}</span> 
+      {/* <span onClick={() => {
         let copyLikeCnt = [...props.likeCnt];
         copyLikeCnt[props.idx]++;
         props.setLikeCnt(copyLikeCnt)
-      }}>👍</span> {props.likeCnt[props.idx]} </h4>
+      }}>✨</span> {props.likeCnt[props.idx]}  */}
+      </h4>
       <p>2월 19일 작성</p>
+      <button type='button' onClick={(e) => {
+        let copyTitle = [...props.title]
+        copyTitle.splice(props.idx, 1)
+        props.setTitle(copyTitle)
+      }}>삭제</button>
     </div>
   );
 }
@@ -74,7 +96,7 @@ function Detail(){
       <p>날짜</p>
       <p>상세내용</p>
     </div>
-  );
+  )
 }
 
 export default App;
